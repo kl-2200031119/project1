@@ -1,0 +1,145 @@
+Create a Maven project and add the following dependencies in your pom.xml:
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.klef.jfsd</groupId>
+    <artifactId>spring-dependency-injection-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>5.3.10</version>
+        </dependency>
+    </dependencies>
+</project>
+Step 2: Create POJO Classes
+Employee.java
+Copy
+package com.klef.jfsd.exam;
+
+import java.util.Collection;
+
+public class Employee {
+    private Integer employeeId;
+    private String name;
+    private Double salary;
+    private String department;
+    private Collection<String> skills;
+
+    public Employee(Integer employeeId, String name, Double salary, String department, Collection<String> skills) {
+        this.employeeId = employeeId;
+        this.name = name;
+        this.salary = salary;
+        this.department = department;
+        this.skills = skills;
+    }
+
+    // Getters and toString() method
+}
+Instructor.java
+Copy
+package com.klef.jfsd.exam;
+
+public class Instructor {
+    private Integer instructorId;
+    private String name;
+    private String email;
+    private String phoneNumber;
+
+    // Constructor, Getters, and toString() method
+}
+Course.java
+Copy
+package com.klef.jfsd.exam;
+
+public class Course {
+    private Integer courseId;
+    private String courseName;
+    private Integer credits;
+    private Instructor instructor; // Non-primitive property
+
+    public Course(Integer courseId, String courseName, Integer credits) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.credits = credits;
+    }
+
+    // Setter for Autowiring
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
+    // Getters and toString() method
+}
+Step 3: Configure Spring Beans
+ApplicationContext.xml
+Copy
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="employee" class="com.klef.jfsd.exam.Employee">
+        <constructor-arg value="1"/>
+        <constructor-arg value="John Doe"/>
+        <constructor-arg value="50000.0"/>
+        <constructor-arg value="IT"/>
+        <constructor-arg>
+            <list>
+                <value>Java</value>
+                <value>Spring</value>
+                <value>SQL</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="instructor" class="com.klef.jfsd.exam.Instructor">
+        <constructor-arg value="101"/>
+        <constructor-arg value="Dr. Smith"/>
+        <constructor-arg value="smith@example.com"/>
+        <constructor-arg value="123-456-7890"/>
+    </bean>
+
+    <bean id="course" class="com.klef.jfsd.exam.Course">
+        <constructor-arg value="201"/>
+        <constructor-arg value="Computer Science"/>
+        <constructor-arg value="3"/>
+        <property name="instructor" ref="instructor"/> <!-- Setter Autowiring -->
+    </bean>
+
+</beans>
+Step 4: Create ClientDemo Class
+ClientDemo.java
+Copy
+package com.klef.jfsd.exam;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class ClientDemo {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+
+        Employee employee = (Employee) context.getBean("employee");
+        Course course = (Course) context.getBean("course");
+
+        System.out.println("Employee Details: " + employee);
+        System.out.println("Course Details: " + course);
+    }
+}
+Step 5: Run the Application
+Compile and run the ClientDemo class. You should see the output displaying the details of the Employee and Course objects, demonstrating both constructor dependency injection and setter autowiring.
+
+Additional Steps
+Attendance and Quiz: Ensure you sign the attendance sheet and complete the quiz in LMS as instructed.
+GitHub Repository: Once you have executed the task, create a GitHub repository and push your project there.
+This setup provides a clear demonstration of both dependency injection methods in a Spring application. If you have any questions or need further assistance, feel free to ask!
